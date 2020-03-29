@@ -1,0 +1,3 @@
+main: me.jedimastersoda.arcadia.paper.Main
+name: Arcadia
+version: ${git.commit.id.abbrev}

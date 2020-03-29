@@ -1,0 +1,10 @@
+# Maven
+target
+*.jar
+
+# VSCode
+.settings
+.vscode
+.factorypath
+.classpath
+.project
