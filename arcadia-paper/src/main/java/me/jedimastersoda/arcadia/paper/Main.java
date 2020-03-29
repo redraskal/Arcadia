@@ -1,17 +1,45 @@
 package me.jedimastersoda.arcadia.paper;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import lombok.Getter;
+import me.jedimastersoda.arcadia.paper.servertype.hub.HubServerType;
+import me.jedimastersoda.arcadia.paper.servertype.ServerType;
 import me.jedimastersoda.arcadia.paper.utils.NMSUtils;
 
 public class Main extends JavaPlugin {
+
+  @Getter private String serverName;
+  @Getter private ServerType serverType;
 
   @Override
   public void onEnable() {
     unregisterCommands();
 
-    // TODO
+    Map<String, Class<? extends ServerType>> serverTypes = new HashMap<>();
+
+    serverTypes.put("hub", HubServerType.class);
+
+    this.serverName = this.getConfig().getString("server-name");
+
+    try {
+      this.serverType = serverTypes.get(this.getConfig().getString("server-type")).newInstance();
+
+      this.getServerType().onEnable(this);
+    } catch (Exception e) {
+      e.printStackTrace();
+
+      Bukkit.shutdown();
+    }
+  }
+
+  public void onDisable() {
+    this.getServerType().onDisable(this);
   }
 
   private void unregisterCommands() {
@@ -38,7 +66,9 @@ public class Main extends JavaPlugin {
               "help",
               "list",
               "?",
-              "bukkit:?"
+              "bukkit:?",
+              "swm",
+              "slimeworldmanager:swm"
             });
           } catch (Exception e) {
             e.printStackTrace();
