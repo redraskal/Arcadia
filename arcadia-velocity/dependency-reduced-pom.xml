@@ -14,6 +14,7 @@
         <directory>src/main/resources</directory>
       </resource>
     </resources>
+    <finalName>${project.artifactId}-${git.commit.id.abbrev}</finalName>
     <plugins>
       <plugin>
         <artifactId>maven-shade-plugin</artifactId>

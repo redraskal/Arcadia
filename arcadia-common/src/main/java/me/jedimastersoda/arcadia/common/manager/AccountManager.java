@@ -17,7 +17,7 @@ public class AccountManager {
 
   private static AccountManager instance;
 
-  public static AccountManager getAccountManager() {
+  public static AccountManager getInstance() {
     if (instance == null) {
       instance = new AccountManager();
     }

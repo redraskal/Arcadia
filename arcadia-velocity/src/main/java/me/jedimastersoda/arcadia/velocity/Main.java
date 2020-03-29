@@ -8,6 +8,8 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import org.slf4j.Logger;
 
 import lombok.Getter;
+import me.jedimastersoda.arcadia.velocity.listener.PlayerJoinListener;
+import me.jedimastersoda.arcadia.velocity.listener.PlayerPreConnectListener;
 
 public class Main {
 
@@ -24,6 +26,9 @@ public class Main {
   public void onProxyInitialization(ProxyInitializeEvent event) {
     this.getLogger().info("Starting Arcadia plugin.");
 
-    // server.getEventManager().register(this, new PluginListener());
+    this.getProxyServer().getCommandManager().unregister("velocity");
+
+    this.getProxyServer().getEventManager().register(this, new PlayerPreConnectListener());
+    this.getProxyServer().getEventManager().register(this, new PlayerJoinListener());
   }
 }

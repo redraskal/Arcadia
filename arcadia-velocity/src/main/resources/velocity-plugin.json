@@ -1,6 +1,6 @@
 {
   "id": "arcadia",
-  "name": "arcadia",
+  "name": "Arcadia",
   "version": "${git.commit.id.abbrev}",
   "main": "me.jedimastersoda.arcadia.velocity.Main"
 }
