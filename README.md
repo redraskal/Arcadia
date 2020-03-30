@@ -1,2 +1,2 @@
 # Arcadia
-an amazing server network
+a high quality server network made in my spare time
