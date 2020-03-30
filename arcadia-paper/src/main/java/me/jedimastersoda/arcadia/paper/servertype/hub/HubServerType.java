@@ -13,7 +13,10 @@ import me.jedimastersoda.arcadia.paper.gui.ItemCallback;
 import me.jedimastersoda.arcadia.paper.gui.ItemCreator;
 import me.jedimastersoda.arcadia.paper.gui.ItemListener;
 import me.jedimastersoda.arcadia.paper.gui.JoinItem;
+import me.jedimastersoda.arcadia.paper.matchmaking.MatchmakingClient;
 import me.jedimastersoda.arcadia.paper.servertype.ServerType;
+import me.jedimastersoda.arcadia.paper.servertype.hub.commands.CancelCommand;
+import me.jedimastersoda.arcadia.paper.servertype.hub.commands.PlayCommand;
 import me.jedimastersoda.arcadia.paper.servertype.hub.listeners.DamageListener;
 import me.jedimastersoda.arcadia.paper.servertype.hub.listeners.DoubleJumpListener;
 import me.jedimastersoda.arcadia.paper.servertype.hub.listeners.HungerListener;
@@ -31,7 +34,7 @@ public class HubServerType extends ServerType {
   @Getter private LocationBounds spawnBoundaries;
 
   @Override
-  public void onEnable(JavaPlugin javaPlugin, String serverName) {
+  public void onEnable(JavaPlugin javaPlugin, String serverName, String serverType) {
     this.javaPlugin = javaPlugin;
     this.spawnLocation = new Location(Bukkit.getWorld("world"), 41.5, 105, 245.5, -90, 1);
     this.spawnBoundaries = new LocationBounds(
@@ -52,6 +55,10 @@ public class HubServerType extends ServerType {
     Bukkit.getWorld("world").setGameRule(GameRule.DO_WEATHER_CYCLE, false);
 
     ScoreboardManager.initialize(this.javaPlugin, serverName);
+
+    MatchmakingClient.init(this.javaPlugin);
+    this.javaPlugin.getCommand("play").setExecutor(new PlayCommand());
+    this.javaPlugin.getCommand("cancel").setExecutor(new CancelCommand());
     
     new JoinItem(this.javaPlugin, ItemCreator.createItem(Material.COMPASS, 1, 0, "&3&lGame Selector"), 0, true);
 

@@ -1,6 +1,5 @@
 package me.jedimastersoda.arcadia.velocity.listener;
 
-import java.sql.SQLException;
 import java.util.UUID;
 
 import com.velocitypowered.api.event.Subscribe;

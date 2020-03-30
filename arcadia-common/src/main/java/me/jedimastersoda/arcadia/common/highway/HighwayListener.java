@@ -5,4 +5,6 @@ import me.jedimastersoda.arcadia.common.object.ServerStatus;
 public abstract class HighwayListener {
 
   public abstract void onServerUpdate(ServerStatus serverStatus);
+
+  public abstract void onMessage(String[] messageFragments);
 }

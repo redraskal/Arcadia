@@ -1,6 +1,8 @@
 package me.jedimastersoda.arcadia.common.db;
 
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
 
 public class RedisConnection {
   
@@ -14,37 +16,16 @@ public class RedisConnection {
     return instance;
   }
 
-  private Jedis jedis;
+  private JedisPool jedis;
 
-  private RedisConnection() {}
+  private RedisConnection() {
+    JedisPoolConfig poolConfig = new JedisPoolConfig();
+    poolConfig.setMaxTotal(128);
 
-  public boolean openConnection() {
-    if(this.jedis == null || !this.jedis.isConnected()) {
-      this.jedis = new Jedis(Credentials.redis_host);
-
-      jedis.connect();
-
-      return true;
-    } else {
-      return false;
-    }
+    this.jedis = new JedisPool(poolConfig, Credentials.redis_host);
   }
 
   public Jedis getRedisConnection() {
-    if(this.jedis == null || !this.jedis.isConnected()) {
-      this.openConnection();
-    }
-
-    return this.jedis;
-  }
-
-  public boolean closeConnection() {
-    if(this.jedis != null && this.jedis.isConnected()) {
-      this.jedis.close();
-
-      return true;
-    } else {
-      return false;
-    }
+    return this.jedis.getResource();
   }
 }

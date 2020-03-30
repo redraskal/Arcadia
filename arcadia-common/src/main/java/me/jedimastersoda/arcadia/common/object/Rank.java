@@ -4,7 +4,7 @@ import lombok.Getter;
 
 public enum Rank {
 
-  DEFAULT(0, "§7", "§7DEFAULT"),
+  DEFAULT(0, "§7", "§fDefault"),
   ADMIN(1, "§c[ADMIN] ", "§c[ADMIN]");
 
   @Getter private final int ranking;

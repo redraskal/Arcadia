@@ -5,6 +5,7 @@ import java.util.List;
 
 import me.jedimastersoda.arcadia.common.db.RedisConnection;
 import me.jedimastersoda.arcadia.common.object.ServerStatus;
+import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
 
 public class RedisServerHighway {
@@ -26,12 +27,19 @@ public class RedisServerHighway {
     this.jedisPubSub = new JedisPubSub() {
       @Override
       public void onMessage(String channel, String message) {
-        String[] messageFragments = message.split("|");
-        ServerStatus serverStatus = new ServerStatus(messageFragments[0], 
-          Integer.parseInt(messageFragments[1]), Integer.parseInt(messageFragments[2]), 
-          messageFragments[3], messageFragments[4]);
+        if(!channel.equalsIgnoreCase("highway")) return;
+
+        String[] messageFragments = message.split("\\|"); // kill me, i didn't realize this was a regular expressions thing and used |
         
-        highwayListeners.forEach(listener -> listener.onServerUpdate(serverStatus));
+        if(messageFragments[0].equals("0")) {
+          ServerStatus serverStatus = new ServerStatus(messageFragments[1], 
+            Integer.parseInt(messageFragments[2]), Integer.parseInt(messageFragments[3]), 
+            messageFragments[4], messageFragments[5]);
+        
+          highwayListeners.forEach(listener -> listener.onServerUpdate(serverStatus));
+        } else {
+          highwayListeners.forEach(listener -> listener.onMessage(messageFragments));
+        }
       }
     };
 
@@ -40,7 +48,7 @@ public class RedisServerHighway {
       public void run() {
         RedisConnection.getInstance().getRedisConnection().subscribe(jedisPubSub, "highway");
       }
-    }, "highwaySubcribeThread").start();
+    }, "highwaySubscribeThread").start();
   }
 
   public void registerListener(HighwayListener highwayListener) {
@@ -52,10 +60,12 @@ public class RedisServerHighway {
   }
 
   public void sendServerStatus(ServerStatus serverStatus) {
-    String message = serverStatus.getServerName() + "|" + serverStatus.getPlayerCount() 
+    String message = "0|" + serverStatus.getServerName() + "|" + serverStatus.getPlayerCount() 
       + "|" + serverStatus.getMaxPlayerCount() + "|" + serverStatus.getServerType() 
       + "|" + serverStatus.getServerStatusMessage();
     
-    RedisConnection.getInstance().getRedisConnection().publish("highway", message);
+    Jedis jedis = RedisConnection.getInstance().getRedisConnection();
+    jedis.publish("highway", message);
+    jedis.close();
   }
 }

@@ -84,18 +84,18 @@ public class ScoreboardManager implements Listener {
     board.reset();
 
     board.add("&1", 7);
-    board.add("&bRank » " + account.getRank().getTag(), 6);
-    board.add("&3Coins » &70", 5);
+    board.add("&3Rank&f: " + account.getRank().getTag(), 6);
+    board.add("&3Coins&f: 0", 5);
     board.add("&2", 4);
-    board.add("&eOnline » &7" + Bukkit.getOnlinePlayers().size(), 3);
-    board.add("&6Server » &7" + this.serverName, 2);
+    board.add("&3Online&f: " + Bukkit.getOnlinePlayers().size(), 3);
+    board.add("&3Server&f: " + this.serverName, 2);
     board.add("&3", 1);
     board.add("&bwww.arcadia.com", 0);
   }
 
   private void updatePlayerCount() {
     this.playerScoreboardMap.values().forEach(simpleScoreboard -> {
-      simpleScoreboard.add("&eOnline » &7" + Bukkit.getOnlinePlayers().size(), 3);
+      simpleScoreboard.add("&3Online&f: " + Bukkit.getOnlinePlayers().size(), 3);
 
       simpleScoreboard.update();
     });

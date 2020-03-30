@@ -15,6 +15,7 @@ import me.jedimastersoda.arcadia.paper.listeners.ChatListener;
 import me.jedimastersoda.arcadia.paper.listeners.JoinListener;
 import me.jedimastersoda.arcadia.paper.listeners.LeaveListener;
 import me.jedimastersoda.arcadia.paper.servertype.ServerType;
+import me.jedimastersoda.arcadia.paper.servertype.game.GameServerType;
 import me.jedimastersoda.arcadia.paper.utils.NMSUtils;
 
 public class Main extends JavaPlugin {
@@ -30,6 +31,7 @@ public class Main extends JavaPlugin {
     Map<String, Class<? extends ServerType>> serverTypes = new HashMap<>();
 
     serverTypes.put("hub", HubServerType.class);
+    serverTypes.put("game", GameServerType.class);
 
     this.serverName = this.getConfig().getString("server-name");
 
@@ -39,14 +41,19 @@ public class Main extends JavaPlugin {
 
     try {
       this.serverTypeString = this.getConfig().getString("server-type");
-      this.serverType = serverTypes.get(serverTypeString).newInstance();
+
+      if(this.serverTypeString.startsWith("game_")) {
+        this.serverType = serverTypes.get("game").newInstance();
+      } else {
+        this.serverType = serverTypes.get(serverTypeString).newInstance();
+      }
 
       RedisServerHighway.getInstance().sendServerStatus(new ServerStatus(
         this.serverName, Bukkit.getOnlinePlayers().size(), Bukkit.getMaxPlayers(), 
         this.serverTypeString, "start")
       );
 
-      this.getServerType().onEnable(this, this.serverName);
+      this.getServerType().onEnable(this, this.serverName, this.serverTypeString);
     } catch (Exception e) {
       e.printStackTrace();
 

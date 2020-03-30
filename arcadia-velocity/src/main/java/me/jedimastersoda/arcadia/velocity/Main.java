@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import lombok.Getter;
 import me.jedimastersoda.arcadia.velocity.listener.PlayerJoinListener;
 import me.jedimastersoda.arcadia.velocity.listener.PlayerPreConnectListener;
+import me.jedimastersoda.arcadia.velocity.matchmaking.MatchmakingController;
 
 public class Main {
 
@@ -30,5 +31,7 @@ public class Main {
 
     this.getProxyServer().getEventManager().register(this, new PlayerPreConnectListener());
     this.getProxyServer().getEventManager().register(this, new PlayerJoinListener());
+
+    MatchmakingController.init(this);
   }
 }
