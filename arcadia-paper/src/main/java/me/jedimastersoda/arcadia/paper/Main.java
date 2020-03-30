@@ -9,6 +9,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import lombok.Getter;
 import me.jedimastersoda.arcadia.paper.servertype.hub.HubServerType;
+import me.jedimastersoda.arcadia.paper.listeners.ChatListener;
 import me.jedimastersoda.arcadia.paper.servertype.ServerType;
 import me.jedimastersoda.arcadia.paper.utils.NMSUtils;
 
@@ -27,10 +28,12 @@ public class Main extends JavaPlugin {
 
     this.serverName = this.getConfig().getString("server-name");
 
+    this.getServer().getPluginManager().registerEvents(new ChatListener(), this);
+
     try {
       this.serverType = serverTypes.get(this.getConfig().getString("server-type")).newInstance();
 
-      this.getServerType().onEnable(this);
+      this.getServerType().onEnable(this, this.serverName);
     } catch (Exception e) {
       e.printStackTrace();
 
@@ -66,9 +69,7 @@ public class Main extends JavaPlugin {
               "help",
               "list",
               "?",
-              "bukkit:?",
-              "swm",
-              "slimeworldmanager:swm"
+              "bukkit:?"
             });
           } catch (Exception e) {
             e.printStackTrace();
