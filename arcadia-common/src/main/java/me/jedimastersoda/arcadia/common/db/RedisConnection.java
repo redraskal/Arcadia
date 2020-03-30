@@ -22,6 +22,8 @@ public class RedisConnection {
     if(this.jedis == null || !this.jedis.isConnected()) {
       this.jedis = new Jedis(Credentials.redis_host);
 
+      jedis.connect();
+
       return true;
     } else {
       return false;

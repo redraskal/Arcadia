@@ -9,7 +9,11 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import lombok.Getter;
 import me.jedimastersoda.arcadia.paper.servertype.hub.HubServerType;
+import me.jedimastersoda.arcadia.common.highway.RedisServerHighway;
+import me.jedimastersoda.arcadia.common.object.ServerStatus;
 import me.jedimastersoda.arcadia.paper.listeners.ChatListener;
+import me.jedimastersoda.arcadia.paper.listeners.JoinListener;
+import me.jedimastersoda.arcadia.paper.listeners.LeaveListener;
 import me.jedimastersoda.arcadia.paper.servertype.ServerType;
 import me.jedimastersoda.arcadia.paper.utils.NMSUtils;
 
@@ -17,6 +21,7 @@ public class Main extends JavaPlugin {
 
   @Getter private String serverName;
   @Getter private ServerType serverType;
+  @Getter private String serverTypeString;
 
   @Override
   public void onEnable() {
@@ -29,9 +34,17 @@ public class Main extends JavaPlugin {
     this.serverName = this.getConfig().getString("server-name");
 
     this.getServer().getPluginManager().registerEvents(new ChatListener(), this);
+    this.getServer().getPluginManager().registerEvents(new LeaveListener(this), this);
+    this.getServer().getPluginManager().registerEvents(new JoinListener(this), this);
 
     try {
-      this.serverType = serverTypes.get(this.getConfig().getString("server-type")).newInstance();
+      this.serverTypeString = this.getConfig().getString("server-type");
+      this.serverType = serverTypes.get(serverTypeString).newInstance();
+
+      RedisServerHighway.getInstance().sendServerStatus(new ServerStatus(
+        this.serverName, Bukkit.getOnlinePlayers().size(), Bukkit.getMaxPlayers(), 
+        this.serverTypeString, "start")
+      );
 
       this.getServerType().onEnable(this, this.serverName);
     } catch (Exception e) {
@@ -43,6 +56,11 @@ public class Main extends JavaPlugin {
 
   public void onDisable() {
     this.getServerType().onDisable(this);
+
+    RedisServerHighway.getInstance().sendServerStatus(new ServerStatus(
+      this.serverName, Bukkit.getOnlinePlayers().size(), Bukkit.getMaxPlayers(), 
+      this.serverTypeString, "shutdown")
+    );
   }
 
   private void unregisterCommands() {
