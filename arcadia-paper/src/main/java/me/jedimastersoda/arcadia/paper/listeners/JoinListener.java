@@ -19,6 +19,8 @@ public class JoinListener implements Listener {
 
   @EventHandler
   public void onPlayerJoin(PlayerJoinEvent event) {
+    event.getPlayer().sendActionBar("§b");
+
     RedisServerHighway.getInstance().sendServerStatus(new ServerStatus(
       main.getServerName(), Bukkit.getOnlinePlayers().size(), Bukkit.getMaxPlayers(), 
       main.getServerTypeString(), "join")
