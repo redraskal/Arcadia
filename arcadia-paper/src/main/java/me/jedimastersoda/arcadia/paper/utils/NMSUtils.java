@@ -3,6 +3,7 @@ package me.jedimastersoda.arcadia.paper.utils;
 import java.lang.reflect.Field;
 import java.util.Map;
 
+import com.grinderwolf.swm.api.world.SlimeWorld;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.tree.CommandNode;
 
@@ -90,6 +91,18 @@ public class NMSUtils {
 
   public static String fetchMinecraftClass(String clazz) {
     return "net.minecraft.server." + fetchNMSVersion() + "." + clazz;
+  }
+
+  public static void modifySlimeWorldName(SlimeWorld slimeWorld, String newName) throws ClassNotFoundException,
+      NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+    Class<?> c_craftSlimeWorld = Class.forName("com.grinderwolf.swm.nms.CraftSlimeWorld");
+    Field name = c_craftSlimeWorld.getDeclaredField("name");
+
+    name.setAccessible(true);
+
+    name.set(slimeWorld, newName);
+
+    name.setAccessible(false);
   }
 
   public static Object accessPrivateField(Object object, String field) throws NoSuchFieldException, SecurityException,

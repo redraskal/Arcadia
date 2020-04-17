@@ -43,7 +43,7 @@ public class DoubleJumpListener implements Listener {
 
       @Override
       public void run() {
-        if(ticks >= 10) {
+        if(ticks >= 30) {
           if(!event.getPlayer().isOnline() || event.getPlayer().isOnGround()) {
             this.cancel();
 
@@ -55,6 +55,6 @@ public class DoubleJumpListener implements Listener {
 
         ticks++;
       }
-    }.runTaskTimer(this.javaPlugin, 0, 3L);
+    }.runTaskTimer(this.javaPlugin, 0, 1L);
   }
 }
