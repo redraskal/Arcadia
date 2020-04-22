@@ -6,15 +6,15 @@ import java.util.List;
 import org.bukkit.entity.Player;
 
 import me.jedimastersoda.arcadia.common.object.Time;
+import me.jedimastersoda.arcadia.paper.servertype.game.GameServerType;
 import me.jedimastersoda.arcadia.paper.servertype.game.Map;
 import me.jedimastersoda.arcadia.paper.servertype.game.gamemode.TimedGamemode;
-import me.jedimastersoda.arcadia.paper.utils.AbstractLocationBounds;
 import me.jedimastersoda.arcadia.paper.utils.Point;
 
 public class RocketRoyalGamemode extends TimedGamemode {
 
-  public RocketRoyalGamemode() {
-    super(new Time(5, 0));
+  public RocketRoyalGamemode(GameServerType gameServer) {
+    super(gameServer, new Time(5, 0));
   }
 
   @Override

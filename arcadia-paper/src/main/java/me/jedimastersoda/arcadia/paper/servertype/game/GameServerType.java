@@ -16,12 +16,14 @@ import me.jedimastersoda.arcadia.paper.servertype.game.gamemode.rocketroyal.Rock
 
 public class GameServerType extends ServerType {
 
+  @Getter private JavaPlugin javaPlugin;
   @Getter private String serverName;
   @Getter private Gamemode gamemode;
   @Getter private String gamemodeTypeString;
 
   @Override
   public void onEnable(JavaPlugin javaPlugin, String serverName, String serverType) {
+    this.javaPlugin = javaPlugin;
     this.serverName = serverName;
     this.gamemodeTypeString = serverType.split("game_")[1];
 
@@ -32,7 +34,7 @@ public class GameServerType extends ServerType {
     gamemodeTypes.put("rr", RocketRoyalGamemode.class);
 
     try {
-      this.gamemode = gamemodeTypes.get(gamemodeTypeString).newInstance();
+      this.gamemode = gamemodeTypes.get(gamemodeTypeString).getConstructor(GameServerType.class).newInstance(this);
 
       javaPlugin.getServer().getPluginManager().registerEvents(new JoinListener(this), javaPlugin);
 

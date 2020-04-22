@@ -7,6 +7,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import lombok.Getter;
+import lombok.Setter;
+import me.jedimastersoda.arcadia.paper.servertype.game.GameServerType;
+import me.jedimastersoda.arcadia.paper.servertype.game.GameState;
 import me.jedimastersoda.arcadia.paper.servertype.game.Map;
 
 public abstract class Gamemode {
@@ -19,15 +22,13 @@ public abstract class Gamemode {
 
   public abstract List<Map> availableMaps();
 
-  public abstract void onPreGame(Player player);
-
-  public abstract void onGameStart();
-
-  public abstract void onGameEnd();
-
+  @Getter private final GameServerType gameServer;
   @Getter private final Map map;
+  @Getter @Setter private GameState gameState = GameState.PRE_GAME;
 
-  public Gamemode() {
+  public Gamemode(GameServerType gameServer) {
+    this.gameServer = gameServer;
+
     if (availableMaps() != null && !availableMaps().isEmpty()) {
       this.map = availableMaps().get(new Random().nextInt(availableMaps().size()));
     } else {
@@ -51,7 +52,18 @@ public abstract class Gamemode {
     }
   }
 
+  public void onPreGame(Player player) {}
+
+  public void onGameStart() {
+    this.setGameState(GameState.INGAME);
+  }
+
   public void endGame() {
+    this.setGameState(GameState.ENDING);
+    this.onGameEnd();
+    
     // TODO
   }
+
+  public void onGameEnd() {}
 }
